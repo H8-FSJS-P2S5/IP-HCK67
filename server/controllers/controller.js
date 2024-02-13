@@ -3,7 +3,7 @@ const { createToken } = require("../helpers/jwt");
 const { User, Favorite } = require("../models");
 const axios = require("axios");
 const { OAuth2Client } = require("google-auth-library");
-const client = new OAuth2Client();
+const client = new OAuth2Client(process.env.google_client);
 const midtransClient = require("midtrans-client");
 const MIDTRANS_API_SERVER = process.env.MIDTRANS_API_SERVER;
 
@@ -77,19 +77,16 @@ class Controller {
 
   static async googleLogin(req, res, next) {
     try {
-      // const {google_token} = req.body
-      // console.log(req.headers.google_token, "di user controller login google");
       const ticket = await client.verifyIdToken({
         idToken: req.headers.google_token,
         audience: process.env.google_client,
       });
       const payload = ticket.getPayload();
-      // console.log(payload, "ini payload login google");
 
-      const user = await User.findOne({ where: { email: payload.email } });
+      let user = await User.findOne({ where: { email: payload.email } });
       if (!user) {
-        const user = await User.create({
-          id,
+        // Menggunakan let agar variabel user di luar scope if masih dapat diakses
+        user = await User.create({
           email: payload.email,
           fullName: payload.name,
           password: String(Math.random()),
@@ -97,9 +94,7 @@ class Controller {
         });
       }
 
-      console.log(user, "data user google controller");
-      // const userid = payload["sub"];
-
+      // console.log(user, "data user google controller"); // Untuk debugging
       const payloadId = {
         id: user.id,
       };
@@ -107,7 +102,7 @@ class Controller {
       const access_token = createToken(payloadId);
       res.status(200).json({ access_token, id: user.id, status: user.status });
     } catch (error) {
-      console.log(error);
+      console.log(error); // Menampilkan kesalahan dalam log untuk memudahkan pemecahan masalah
       next(error);
     }
   }
@@ -118,8 +113,8 @@ class Controller {
       method: "GET",
       url: "https://imdb-top-100-movies.p.rapidapi.com/",
       headers: {
-        'X-RapidAPI-Key': '2c071d6c9dmsh2d1f4d04bf62feep16faf2jsnae8caa0deba5',
-        'X-RapidAPI-Host': 'imdb-top-100-movies.p.rapidapi.com'
+        "X-RapidAPI-Key": "667efbb698msh7a883704b268dfdp1c82d7jsnf63d636888ea",
+        "X-RapidAPI-Host": "imdb-top-100-movies.p.rapidapi.com",
       },
     };
     try {
@@ -138,14 +133,14 @@ class Controller {
       method: "GET",
       url: `https://imdb-top-100-movies.p.rapidapi.com/${id}`,
       headers: {
-        'X-RapidAPI-Key': '2c071d6c9dmsh2d1f4d04bf62feep16faf2jsnae8caa0deba5',
-        'X-RapidAPI-Host': 'imdb-top-100-movies.p.rapidapi.com'
+        "X-RapidAPI-Key": "667efbb698msh7a883704b268dfdp1c82d7jsnf63d636888ea",
+        "X-RapidAPI-Host": "imdb-top-100-movies.p.rapidapi.com",
       },
     };
-
+    console.log(options, "<<<<<<<<<getdatabyid");
     try {
       const response = await axios.request(options);
-      // console.log(response, "masukkk<<<<<<<<");
+      console.log(response, "masukkk<<<<<<<<");
       res.status(200).json(response.data);
     } catch (error) {
       console.log(error);
@@ -176,8 +171,8 @@ class Controller {
       method: "GET",
       url: `https://imdb-top-100-movies.p.rapidapi.com/${id}`,
       headers: {
-        'X-RapidAPI-Key': '2c071d6c9dmsh2d1f4d04bf62feep16faf2jsnae8caa0deba5',
-        'X-RapidAPI-Host': 'imdb-top-100-movies.p.rapidapi.com'
+        "X-RapidAPI-Key": "667efbb698msh7a883704b268dfdp1c82d7jsnf63d636888ea",
+        "X-RapidAPI-Host": "imdb-top-100-movies.p.rapidapi.com",
       },
     };
 

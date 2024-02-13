@@ -83,37 +83,27 @@ export default function MoviesId() {
             <h2 className="card-title" style={{ fontFamily: "Helvetica" }}>
               {detailFav?.title} - {detailFav?.id}
             </h2>
-
             <p>
               {" "}
               <strong>Release</strong> : {detailFav?.year}
             </p>
-            <p>{detailFav?.description}</p>
-
-            {localStorage.getItem("status") == "premium" ? (
-              <div className="card-actions justify-end">
-                <button
-                  type="button"
-                  className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                >
-                  <Link to={`/favorites`}>Add To Fav</Link>
-                </button>
-              </div>
-            ) : (
-              <div className="card-actions justify-end">
-                <button
-                  type="button"
-                  // pake onlick handlepayment, jangan pake link to
-                  onClick={() => {
-                    // console.log("logout navbar");
-                    handlePremium();
-                  }}
-                  className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                >
-                  <>Get Premium!</>
-                </button>
-              </div>
-            )}
+            <p>Description: {detailFav?.description}</p>
+            <p>Genre: {detailFav?.genre}</p>
+            <p>Director: {detailFav?.director}</p>
+            <p>Writers: {detailFav?.writers}</p>
+            <div className="card-actions justify-end">
+              <button
+                type="button"
+                // pake onlick handlepayment, jangan pake link to
+                onClick={() => {
+                  // console.log("logout navbar");
+                  handlePremium();
+                }}
+                className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+              >
+                <>Get Premium!</>
+              </button>
+            </div>
           </div>
         </div>
       </div>

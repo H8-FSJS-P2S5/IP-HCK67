@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDetailMovie } from "../features/actions";
@@ -8,7 +8,6 @@ export default function Movie() {
   const navigate = useNavigate();
   const movieList = useSelector((state) => state.movies.movies);
   const dispatch = useDispatch();
-  // console.log(movieList, "Movie masuk");
 
   useEffect(() => {
     dispatch(fetchDetailMovie());
@@ -17,7 +16,6 @@ export default function Movie() {
   const handleFavorite = async (id) => {
     try {
       console.log("masuk");
-      // id buat edit dibawah
 
       const response = await axios.post(
         `http://localhost:3000/favorites/${id}`,
@@ -29,16 +27,32 @@ export default function Movie() {
         }
       );
 
-      // const response = await axios.post(
-      //   `http://localhost:3000/favorites/${id}`,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      //     },
-      //   }
-      // );
       console.log(response.data, "add favvvvvvvvvvvvvvvvvvvvv");
       setDetailReview(response.data);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  const handlePlay = async (id) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/movies/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+
+      console.log(response.data, "handle play <<<<<<<<<<<<<<<");
+
+      const movieData = response.data.data;
+      const trailer = movieData.trailer_embed_link;
+
+      window.open(trailer, "_blank");
     } catch (error) {
       console.log(error);
       throw error;
@@ -86,7 +100,16 @@ export default function Movie() {
                 handleFavorite(el.id);
               }}
             >
-              {/* <Link to={`/favorites/${el.id}`}>Add Fav</Link> */} Add Fav
+              Add Movie
+            </button>
+            <button
+              type="button"
+              className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+              onClick={() => {
+                handlePlay(el.id);
+              }}
+            >
+              Play
             </button>
           </div>
         ))}

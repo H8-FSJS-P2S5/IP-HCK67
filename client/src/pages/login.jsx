@@ -1,31 +1,27 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 export default function Login() {
   const navigate = useNavigate();
   const [formLogin, setFormLogin] = useState({
     email: "",
     password: "",
   });
-  console.log("<<<<<>>>>>>>>");
-  console.log("masuk login");
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log("login nih jsx", formLogin);
       const { data } = await axios.post(
         "http://localhost:3000/login",
         formLogin
       );
 
-      console.log(data, "login on submit");
       localStorage.setItem("access_token", data.access_token);
       localStorage.setItem("id", data.id);
       localStorage.setItem("status", data.status);
-      console.log("masuk");
+
       navigate("/movies");
-      console.log("masuk2");
     } catch (error) {
       console.log(error, "loginpage jsx");
       throw error;
@@ -33,7 +29,6 @@ export default function Login() {
   };
 
   async function handleCredentialResponse(response) {
-    console.log("Encoded JWT ID token: " + response.credential);
     try {
       const { data } = await axios.post(
         "http://localhost:3000/google-login",
@@ -44,13 +39,12 @@ export default function Login() {
           },
         }
       );
-      console.log(data, "data google login di login jsx");
+
       localStorage.setItem("access_token", data.access_token);
       localStorage.setItem("id", data.id);
       localStorage.setItem("status", data.status);
-      console.log("masuk 1");
+
       navigate("/movies");
-      console.log("masuk2<");
     } catch (error) {
       console.log(error, "login google");
     }
@@ -70,15 +64,14 @@ export default function Login() {
         "339593096588-l90btd7llmhv3fhnougfug1nhb5uia7b.apps.googleusercontent.com",
       callback: handleCredentialResponse,
     });
-    google.accounts.id.renderButton(
-      document.getElementById("buttonDiv"),
-      { theme: "outline", size: "large" } // customization attributes
-    );
-    // google.accounts.id.prompt(); // also display the One Tap dialog
+    google.accounts.id.renderButton(document.getElementById("buttonDiv"), {
+      theme: "outline",
+      size: "large",
+    });
   }, []);
+
   return (
     <>
-      {/* component */}
       <div
         className="flex h-screen w-full items-center justify-center bg-gray-900 bg-cover bg-no-repeat"
         style={{
@@ -97,36 +90,37 @@ export default function Login() {
               <h1 className="mb-2 text-2xl">HANSMOVE</h1>
               <span className="text-gray-300">Fill Require, Dude!</span>
             </div>
-            <form action="" onSubmit={handleOnSubmit}>
-              <div className="mb-4 text-lg">
-                <input
-                  className="rounded-3xl border-none bg-yellow-400 bg-opacity-50 px-6 py-2 text-center text-inherit placeholder-slate-200 shadow-lg outline-none backdrop-blur-md"
-                  type="text"
-                  name="name"
-                  onChange={handleChange}
-                  defaultValue={formLogin.email}
-                  placeholder="id@email.com"
-                />
-              </div>
-              <div className="mb-4 text-lg">
-                <input
-                  className="rounded-3xl border-none bg-yellow-400 bg-opacity-50 px-6 py-2 text-center text-inherit placeholder-slate-200 shadow-lg outline-none backdrop-blur-md"
-                  type="Password"
-                  name="name"
-                  onChange={handleChange}
-                  defaultValue={formLogin.password}
-                  placeholder="*********"
-                />
-              </div>
+            <form onSubmit={handleOnSubmit}>
+              <input
+                className="rounded-3xl border-none bg-yellow-400 bg-opacity-50 px-6 py-2 text-center text-inherit placeholder-slate-200 shadow-lg outline-none backdrop-blur-md"
+                type="text"
+                name="email"
+                onChange={handleChange}
+                value={formLogin.email}
+                placeholder="id@email.com"
+                style={{
+                  margin: "auto",
+                  display: "block",
+                  marginBottom: "10px",
+                }}
+              />
+
+              <input
+                className="rounded-3xl border-none bg-yellow-400 bg-opacity-50 px-6 py-2 text-center text-inherit placeholder-slate-200 shadow-lg outline-none backdrop-blur-md"
+                type="password"
+                name="password"
+                onChange={handleChange}
+                value={formLogin.password}
+                placeholder="*********"
+                style={{ margin: "auto", display: "block" }}
+              />
+
               <div className="mt-8 flex justify-center text-lg text-black">
                 <button
                   type="submit"
                   className="rounded-3xl bg-yellow-400 bg-opacity-50 px-10 py-2 text-white shadow-xl backdrop-blur-md transition-colors duration-300 hover:bg-yellow-600"
-                  onClick={() => {
-                    navigate("/movies")
-                  }}
-                > 
-                  Sign Up
+                >
+                  Sign In
                 </button>
               </div>
               <div
@@ -134,7 +128,6 @@ export default function Login() {
                 style={{ margin: "10px" }}
                 id="buttonDiv"
               ></div>
-
               <p className="mt-4 block text-center font-sans text-base font-normal leading-relaxed text-gray-700 antialiased">
                 Don't have an account yet?
                 <Link
