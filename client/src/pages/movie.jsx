@@ -94,7 +94,7 @@ export default function Movie() {
         setHasMore(false);
         return;
       }
-      // Dispatch aksi Redux setMovie untuk memperbarui daftar film di Redux store
+      
       dispatch(setMovie([...movieList, ...response.data]));
     } catch (error) {
       console.log(error);

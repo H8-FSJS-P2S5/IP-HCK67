@@ -185,7 +185,7 @@ class Controller {
 
       // console.log(findId, "masuk1<<<<");
       const filterMovie = findId.filter((el) => {
-        return el.MovieId === id; // membandingkan MovieId properti dari favorite, dan movieId adalah balikan dari data imdb
+        return el.MovieId === id; 
       });
       if (filterMovie.length !== 0) {
         throw { name: "Data Already Exists" };
