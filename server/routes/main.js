@@ -11,5 +11,6 @@ main.get("/favorites", Controller.getFav);
 main.post("/favorites/:id", Controller.addToFav);
 main.delete("/favorites/delete/:id", Controller.deleteFav);
 main.put("/users/status/:id", Controller.toPremium);
+main.get("/users/status/premium/:id", Controller.premiumCheck);
 
 module.exports = main;

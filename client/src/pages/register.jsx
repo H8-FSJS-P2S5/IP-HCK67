@@ -14,14 +14,12 @@ export default function Register() {
   const handleOnSubmitRegister = async (e) => {
     e.preventDefault();
     try {
-      // console.log("register nih jsx", formRegister);
-
       const result = await Swal.fire({
         title: "Do you want add a New User?",
         showCancelButton: true,
-        cancelButtonColor: "#67729D",
+        cancelButtonColor: "#E64935",
         confirmButtonText: "Yes",
-        confirmButtonColor: "#BB9CC0",
+        confirmButtonColor: "#FEEE93",
       });
 
       if (result.isConfirmed) {
@@ -42,7 +40,7 @@ export default function Register() {
             await Swal.fire({
               position: "top-center",
               icon: "success",
-              title: `Thanks buddy${data.email}`,
+              title: `Thanks buddy ${data.email}`,
               showConfirmButton: false,
               timer: 1500,
             });
@@ -61,7 +59,6 @@ export default function Register() {
   };
 
   const handleChangeRegister = (e) => {
-    // console.log("ini bakal change");
     const { value, name } = e.target;
     setFormRegister({
       ...formRegister,
@@ -70,7 +67,6 @@ export default function Register() {
   };
   return (
     <>
-      {/* component */}
       <div
         className="flex h-screen w-full items-center justify-center bg-gray-900 bg-cover bg-no-repeat"
         style={{
@@ -89,13 +85,13 @@ export default function Register() {
               <h1 className="mb-2 text-2xl">HANSMOVE</h1>
               <span className="text-gray-300">Create your account first!</span>
             </div>
-            <form action="" onSubmit={handleOnSubmitRegister}>
+            <form onSubmit={handleOnSubmitRegister}>
               <div className="mb-4 text-lg">
                 <input
                   className="rounded-3xl border-none bg-yellow-400 bg-opacity-50 px-6 py-2 text-center text-inherit placeholder-slate-200 shadow-lg outline-none backdrop-blur-md"
                   type="text"
-                  name="name"
-                  defaultValue={formRegister.fullName}
+                  name="fullName"
+                  value={formRegister.fullName}
                   onChange={handleChangeRegister}
                   placeholder="Full Name"
                 />
@@ -104,8 +100,8 @@ export default function Register() {
                 <input
                   className="rounded-3xl border-none bg-yellow-400 bg-opacity-50 px-6 py-2 text-center text-inherit placeholder-slate-200 shadow-lg outline-none backdrop-blur-md"
                   type="text"
-                  name="name"
-                  defaultValue={formRegister.email}
+                  name="email"
+                  value={formRegister.email}
                   onChange={handleChangeRegister}
                   placeholder="id@email.com"
                 />
@@ -113,9 +109,9 @@ export default function Register() {
               <div className="mb-4 text-lg">
                 <input
                   className="rounded-3xl border-none bg-yellow-400 bg-opacity-50 px-6 py-2 text-center text-inherit placeholder-slate-200 shadow-lg outline-none backdrop-blur-md"
-                  type="Password"
-                  name="name"
-                  defaultValue={formRegister.password}
+                  type="password"
+                  name="password"
+                  value={formRegister.password}
                   onChange={handleChangeRegister}
                   placeholder="*********"
                 />
@@ -124,9 +120,6 @@ export default function Register() {
                 <button
                   type="submit"
                   className="rounded-3xl bg-yellow-400 bg-opacity-50 px-10 py-2 text-white shadow-xl backdrop-blur-md transition-colors duration-300 hover:bg-yellow-600"
-                  onClick={() => {
-                    navigate("/login");
-                  }}
                 >
                   Sign Up
                 </button>

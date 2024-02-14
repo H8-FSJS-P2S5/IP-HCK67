@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDetailMovie } from "../features/actions";
@@ -8,15 +8,40 @@ export default function Movie() {
   const navigate = useNavigate();
   const movieList = useSelector((state) => state.movies.movies);
   const dispatch = useDispatch();
+  const [isPremium, setIsPremium] = useState(false);
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
 
   useEffect(() => {
     dispatch(fetchDetailMovie());
-  }, []);
+    console.log(isPremium, "ini prm");
+    const checkPremiumStatus = async () => {
+      try {
+        const id = localStorage.getItem("id");
+        console.log(id, "masuk id");
+        const response = await axios.get(
+          `http://localhost:3000/users/status/premium/${id}`,
+
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+        console.log(response.data, "masuk premium");
+        if (response.data.status == "basic") {
+          setIsPremium(false);
+        } else {
+          setIsPremium(true);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    checkPremiumStatus();
+  }, [isPremium]);
 
   const handleFavorite = async (id) => {
     try {
-      console.log("masuk");
-
       const response = await axios.post(
         `http://localhost:3000/favorites/${id}`,
         {},
@@ -27,35 +52,81 @@ export default function Movie() {
         }
       );
 
-      console.log(response.data, "add favvvvvvvvvvvvvvvvvvvvv");
-      setDetailReview(response.data);
+      console.log(response.data, "menambahkan favorit");
     } catch (error) {
       console.log(error);
       throw error;
     }
   };
 
-  const handlePlay = async (id) => {
+  const changeStatusUsertoPremium = async (userId, movieId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:3000/movies/${id}`,
-        {},
-        {
+      console.log("masuk change status");
+      const { data } = await axios({
+        method: "put",
+        url: `http://localhost:3000/users/status/${userId}`,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      localStorage.removeItem("status");
+      console.log(data, "dari card review");
+      localStorage.setItem("status", data.status);
+      navigate(`/movies`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handlePremium = async (movieId) => {
+    try {
+      console.log("payment");
+      const { data } = await axios({
+        method: "POST",
+        url: `http://localhost:3000/movies/upgrate`,
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+
+      let userId = localStorage.getItem("id");
+
+      window.snap.pay(data.token, {
+        onSuccess: function (result) {
+          changeStatusUsertoPremium(userId, movieId);
+          localStorage.setItem("premium", true);
+          setShowPremiumModal(false);
+          setIsPremium(true);
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handlePlay = async (id) => {
+    if (!isPremium) {
+      setShowPremiumModal(true);
+    } else {
+      try {
+        const response = await axios.get(`http://localhost:3000/movies/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
+        });
+
+        const movieData = response.data;
+
+        if (movieData && movieData.trailer) {
+          const trailer = movieData.trailer;
+          window.open(trailer, "_blank");
+        } else {
+          console.error("Trailer film tidak ditemukan atau tidak lengkap.");
         }
-      );
-
-      console.log(response.data, "handle play <<<<<<<<<<<<<<<");
-
-      const movieData = response.data.data;
-      const trailer = movieData.trailer_embed_link;
-
-      window.open(trailer, "_blank");
-    } catch (error) {
-      console.log(error);
-      throw error;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
     }
   };
 
@@ -68,6 +139,7 @@ export default function Movie() {
             'url("https://isquad.tv/wp-content/uploads/2018/08/Netflix-Background.jpg")',
         }}
       >
+        
         {movieList.map((el) => (
           <div
             key={el.id}
@@ -81,8 +153,7 @@ export default function Movie() {
             <p className="font-bold text-black font-serif m-2">{el.title}</p>
             <p className="text-black font-serif m-2">
               {" "}
-              Rank
-              <strong /> : {el.rank}
+              Rank <strong /> : {el.rank}
             </p>
             <p className="font-semibold text-black font-mono m-2">
               {el.description}
@@ -114,6 +185,81 @@ export default function Movie() {
           </div>
         ))}
       </div>
+
+      {/* MODAL */}
+      {showPremiumModal && !isPremium && (
+        <div className="fixed z-10 inset-0 overflow-y-auto">
+          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div
+              className="fixed inset-0 transition-opacity"
+              aria-hidden="true"
+            >
+              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            <span
+              className="hidden sm:inline-block sm:align-middle sm:h-screen"
+              aria-hidden="true"
+            >
+              &#8203;
+            </span>
+            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div className="sm:flex sm:items-start">
+                  <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                    <svg
+                      className="h-6 w-6 text-red-600"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 9v2m0 4h.01m-6-6h12a2 2 0 012 2v8a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2z"
+                      />
+                    </svg>
+                  </div>
+                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                    <h3
+                      className="text-lg leading-6 font-medium text-gray-900"
+                      id="modal-title"
+                    >
+                      You don't have a premium status yet.
+                    </h3>
+                    <div className="mt-2">
+                      <p className="text-sm text-gray-500">
+                        You need to have a premium status to play movies. Please
+                        upgrade to premium status to enjoy this feature.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button
+                  type="button"
+                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  onClick={() => {
+                    handlePremium();
+                  }}
+                >
+                  Premium
+                </button>
+                <button
+                  type="button"
+                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  onClick={() => setShowPremiumModal(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

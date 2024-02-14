@@ -9,7 +9,6 @@ const MIDTRANS_API_SERVER = process.env.MIDTRANS_API_SERVER;
 
 class Controller {
   static async register(req, res, next) {
-    // register
     try {
       const { fullName, email, password } = req.body;
       const user = await User.create({ fullName, email, password });
@@ -24,7 +23,6 @@ class Controller {
   }
 
   static async login(req, res, next) {
-    // login
     try {
       // console.log("masuk <<<<<<<");
       const { email, password } = req.body;
@@ -85,7 +83,6 @@ class Controller {
 
       let user = await User.findOne({ where: { email: payload.email } });
       if (!user) {
-        // Menggunakan let agar variabel user di luar scope if masih dapat diakses
         user = await User.create({
           email: payload.email,
           fullName: payload.name,
@@ -102,7 +99,7 @@ class Controller {
       const access_token = createToken(payloadId);
       res.status(200).json({ access_token, id: user.id, status: user.status });
     } catch (error) {
-      console.log(error); // Menampilkan kesalahan dalam log untuk memudahkan pemecahan masalah
+      console.log(error);
       next(error);
     }
   }
@@ -113,8 +110,8 @@ class Controller {
       method: "GET",
       url: "https://imdb-top-100-movies.p.rapidapi.com/",
       headers: {
-        "X-RapidAPI-Key": "667efbb698msh7a883704b268dfdp1c82d7jsnf63d636888ea",
-        "X-RapidAPI-Host": "imdb-top-100-movies.p.rapidapi.com",
+        'X-RapidAPI-Key': '6363fed38dmsh755316d0aaf1210p1d732cjsnb29352c0f574',
+    'X-RapidAPI-Host': 'imdb-top-100-movies.p.rapidapi.com'
       },
     };
     try {
@@ -133,8 +130,8 @@ class Controller {
       method: "GET",
       url: `https://imdb-top-100-movies.p.rapidapi.com/${id}`,
       headers: {
-        "X-RapidAPI-Key": "667efbb698msh7a883704b268dfdp1c82d7jsnf63d636888ea",
-        "X-RapidAPI-Host": "imdb-top-100-movies.p.rapidapi.com",
+        'X-RapidAPI-Key': '6363fed38dmsh755316d0aaf1210p1d732cjsnb29352c0f574',
+    'X-RapidAPI-Host': 'imdb-top-100-movies.p.rapidapi.com'
       },
     };
     console.log(options, "<<<<<<<<<getdatabyid");
@@ -171,8 +168,8 @@ class Controller {
       method: "GET",
       url: `https://imdb-top-100-movies.p.rapidapi.com/${id}`,
       headers: {
-        "X-RapidAPI-Key": "667efbb698msh7a883704b268dfdp1c82d7jsnf63d636888ea",
-        "X-RapidAPI-Host": "imdb-top-100-movies.p.rapidapi.com",
+        'X-RapidAPI-Key': '6363fed38dmsh755316d0aaf1210p1d732cjsnb29352c0f574',
+    'X-RapidAPI-Host': 'imdb-top-100-movies.p.rapidapi.com'
       },
     };
 
@@ -273,6 +270,24 @@ class Controller {
       });
     } catch (error) {
       console.log(error);
+      next(error);
+    }
+  }
+
+  static async premiumCheck(req, res, next) {
+    try {
+      const { id } = req.params;
+      console.log(req.params, "masuk");
+      let foundUser = await User.findByPk(id);
+      if (!foundUser) {
+        throw { name: "NotFound", message: "User not found" };
+      }
+      res.status(200).json({
+        status: foundUser.status,
+        message: "Premium status retrieved successfully",
+      });
+    } catch (error) {
+      console.error(error);
       next(error);
     }
   }
