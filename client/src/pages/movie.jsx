@@ -3,42 +3,38 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDetailMovie } from "../features/actions";
 import axios from "axios";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { setMovie } from "../features/movieSlice";
 
 export default function Movie() {
   const navigate = useNavigate();
-  const movieList = useSelector((state) => state.movies.movies);
   const dispatch = useDispatch();
+  const movieList = useSelector((state) => state.movies.movies);
   const [isPremium, setIsPremium] = useState(false);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     dispatch(fetchDetailMovie());
-    console.log(isPremium, "ini prm");
-    const checkPremiumStatus = async () => {
-      try {
-        const id = localStorage.getItem("id");
-        console.log(id, "masuk id");
-        const response = await axios.get(
-          `http://localhost:3000/users/status/premium/${id}`,
-
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-          }
-        );
-        console.log(response.data, "masuk premium");
-        if (response.data.status == "basic") {
-          setIsPremium(false);
-        } else {
-          setIsPremium(true);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
     checkPremiumStatus();
-  }, [isPremium]);
+  }, []);
+
+  const checkPremiumStatus = async () => {
+    try {
+      const id = localStorage.getItem("id");
+      const response = await axios.get(
+        `http://localhost:3000/users/status/premium/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+      setIsPremium(response.data.status !== "basic");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleFavorite = async (id) => {
     try {
@@ -51,56 +47,10 @@ export default function Movie() {
           },
         }
       );
-
       console.log(response.data, "menambahkan favorit");
     } catch (error) {
       console.log(error);
       throw error;
-    }
-  };
-
-  const changeStatusUsertoPremium = async (userId, movieId) => {
-    try {
-      console.log("masuk change status");
-      const { data } = await axios({
-        method: "put",
-        url: `http://localhost:3000/users/status/${userId}`,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      });
-      localStorage.removeItem("status");
-      console.log(data, "dari card review");
-      localStorage.setItem("status", data.status);
-      navigate(`/movies`);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handlePremium = async (movieId) => {
-    try {
-      console.log("payment");
-      const { data } = await axios({
-        method: "POST",
-        url: `http://localhost:3000/movies/upgrate`,
-        headers: {
-          authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      });
-
-      let userId = localStorage.getItem("id");
-
-      window.snap.pay(data.token, {
-        onSuccess: function (result) {
-          changeStatusUsertoPremium(userId, movieId);
-          localStorage.setItem("premium", true);
-          setShowPremiumModal(false);
-          setIsPremium(true);
-        },
-      });
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -130,61 +80,89 @@ export default function Movie() {
     }
   };
 
+  const fetchMoreData = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/movies?page=${movieList.length}&limit=10`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+      if (response.data.length === 0) {
+        setHasMore(false);
+        return;
+      }
+      // Dispatch aksi Redux setMovie untuk memperbarui daftar film di Redux store
+      dispatch(setMovie([...movieList, ...response.data]));
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
   return (
     <>
-      <div
-        className="flex flex-wrap justify-center m-3"
-        style={{
-          backgroundImage:
-            'url("https://isquad.tv/wp-content/uploads/2018/08/Netflix-Background.jpg")',
-        }}
+      <InfiniteScroll
+        dataLength={movieList.length}
+        next={fetchMoreData}
+        hasMore={hasMore}
+        // loader={<h4>Loading...</h4>}
       >
-        
-        {movieList.map((el) => (
-          <div
-            key={el.id}
-            className="w-full sm:w-72 md:w-96 lg:w-80 xl:w-96 cursor-pointer rounded-lg bg-white p-2 m-2 shadow duration-150 hover:scale-105 hover:shadow-md opacity-90"
-          >
-            <img
-              className="w-full h-auto rounded-lg object-cover object-center"
-              src={el.image}
-              alt="movies"
-            />
-            <p className="font-bold text-black font-serif m-2">{el.title}</p>
-            <p className="text-black font-serif m-2">
-              {" "}
-              Rank <strong /> : {el.rank}
-            </p>
-            <p className="font-semibold text-black font-mono m-2">
-              {el.description}
-            </p>
-            <button
-              type="button"
-              className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+        <div
+          className="flex flex-wrap justify-center m-3"
+          style={{
+            backgroundImage:
+              'url("https://isquad.tv/wp-content/uploads/2018/08/Netflix-Background.jpg")',
+          }}
+        >
+          {movieList.map((el) => (
+            <div
+              key={el.id}
+              className="w-full sm:w-72 md:w-96 lg:w-80 xl:w-96 cursor-pointer rounded-lg bg-white p-2 m-2 shadow duration-150 hover:scale-105 hover:shadow-md opacity-90"
             >
-              <Link to={`/movies/${el.id}`}>Detail</Link>
-            </button>
-            <button
-              type="button"
-              className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-              onClick={() => {
-                handleFavorite(el.id);
-              }}
-            >
-              Add Movie
-            </button>
-            <button
-              type="button"
-              className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-              onClick={() => {
-                handlePlay(el.id);
-              }}
-            >
-              Play
-            </button>
-          </div>
-        ))}
-      </div>
+              <img
+                className="w-full h-auto rounded-lg object-cover object-center"
+                src={el.image}
+                alt="movies"
+              />
+              <p className="font-bold text-black font-serif m-2">{el.title}</p>
+              <p className="text-black font-serif m-2">
+                {" "}
+                Rank <strong /> : {el.rank}
+              </p>
+              <p className="font-semibold text-black font-mono m-2">
+                {el.description}
+              </p>
+              <button
+                type="button"
+                className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+              >
+                <Link to={`/movies/${el.id}`}>Detail</Link>
+              </button>
+              <button
+                type="button"
+                className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                onClick={() => {
+                  handleFavorite(el.id);
+                }}
+              >
+                Add Movie
+              </button>
+              <button
+                type="button"
+                className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                onClick={() => {
+                  handlePlay(el.id);
+                }}
+              >
+                Play
+              </button>
+            </div>
+          ))}
+        </div>
+      </InfiniteScroll>
 
       {/* MODAL */}
       {showPremiumModal && !isPremium && (
