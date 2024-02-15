@@ -105,15 +105,17 @@ class Controller {
   }
 
   static async getData(req, res, next) {
-    // get all data
+    const searchQuery = req.query.search;
+
     const options = {
       method: "GET",
-      url: "https://imdb-top-100-movies.p.rapidapi.com/",
+      url: `https://imdb-top-100-movies.p.rapidapi.com/?search=${searchQuery}`,
       headers: {
-       'X-RapidAPI-Key': 'd5f9bffc20mshf5d553eeb463cadp1fe23ajsn560846538476',
-    'X-RapidAPI-Host': 'imdb-top-100-movies.p.rapidapi.com'
+        "X-RapidAPI-Key": "d5f9bffc20mshf5d553eeb463cadp1fe23ajsn560846538476",
+        "X-RapidAPI-Host": "imdb-top-100-movies.p.rapidapi.com",
       },
     };
+
     try {
       const response = await axios.request(options);
       res.status(200).json(response.data);
@@ -122,7 +124,6 @@ class Controller {
       next(error);
     }
   }
-
   static async getDataById(req, res, next) {
     // get by id
     const { id } = req.params;
@@ -130,8 +131,8 @@ class Controller {
       method: "GET",
       url: `https://imdb-top-100-movies.p.rapidapi.com/${id}`,
       headers: {
-       'X-RapidAPI-Key': 'd5f9bffc20mshf5d553eeb463cadp1fe23ajsn560846538476',
-    'X-RapidAPI-Host': 'imdb-top-100-movies.p.rapidapi.com'
+        "X-RapidAPI-Key": "d5f9bffc20mshf5d553eeb463cadp1fe23ajsn560846538476",
+        "X-RapidAPI-Host": "imdb-top-100-movies.p.rapidapi.com",
       },
     };
     console.log(options, "<<<<<<<<<getdatabyid");
@@ -168,8 +169,8 @@ class Controller {
       method: "GET",
       url: `https://imdb-top-100-movies.p.rapidapi.com/${id}`,
       headers: {
-       'X-RapidAPI-Key': 'd5f9bffc20mshf5d553eeb463cadp1fe23ajsn560846538476',
-    'X-RapidAPI-Host': 'imdb-top-100-movies.p.rapidapi.com'
+        "X-RapidAPI-Key": "d5f9bffc20mshf5d553eeb463cadp1fe23ajsn560846538476",
+        "X-RapidAPI-Host": "imdb-top-100-movies.p.rapidapi.com",
       },
     };
 

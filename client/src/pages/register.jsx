@@ -119,7 +119,7 @@ export default function Register() {
               <div className="mt-8 flex justify-center text-lg text-black">
                 <button
                   type="submit"
-                  className="rounded-3xl bg-yellow-400 bg-opacity-50 px-10 py-2 text-white shadow-xl backdrop-blur-md transition-colors duration-300 hover:bg-yellow-600"
+                  className="rounded-3xl bg-yellow-400 bg-opacity-50 px-10 py-2 text-yellow-800  backdrop-blur-md transition-colors duration-300 hover:bg-yellow-600"
                 >
                   Sign Up
                 </button>
