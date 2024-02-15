@@ -1,6 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 
-export default function Search() {
+export default function Search({ onSearch, movies }) {
+  const [searchValue, setSearchValue] = useState("");
+
+  // const handleInputChange = (event) => {
+  //   onSearch(event.target.value);
+  // };
+
+  const handleInputChange = (event) => {
+    setSearchValue(event.target.value);
+  };
+
+  const handleSearchButtonClick = () => {
+    onSearch(searchValue);
+  };
+
   return (
     <div className="pt-2 relative mx-auto text-gray-600">
       <label
@@ -10,9 +24,14 @@ export default function Search() {
         <input
           id="search-bar"
           placeholder="your keyword here"
+          value={searchValue}
+          onChange={handleInputChange}
           className="px-6 py-2 w-full rounded-md flex-1 outline-none bg-white"
         />
-        <button className="w-full md:w-auto px-6 py-3 bg-teal-400 border-white text-white fill-white active:scale-95 duration-100 border will-change-transform overflow-hidden relative rounded-xl transition-all disabled:opacity-70">
+        <button
+          onClick={handleSearchButtonClick}
+          className="w-full md:w-auto px-6 py-3 bg-black hover:bg-gray-400 border-white text-white fill-white active:scale-95 duration-100 border will-change-transform overflow-hidden relative rounded-xl transition-all disabled:opacity-70"
+        >
           <div className="relative">
             <div className="flex items-center justify-center h-3 w-3 absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 transition-all">
               <svg

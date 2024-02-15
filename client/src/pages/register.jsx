@@ -113,7 +113,7 @@ export default function Register() {
                   name="password"
                   value={formRegister.password}
                   onChange={handleChangeRegister}
-                  placeholder="*********"
+                  placeholder="****"
                 />
               </div>
               <div className="mt-8 flex justify-center text-lg text-black">

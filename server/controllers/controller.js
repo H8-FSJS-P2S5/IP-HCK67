@@ -91,7 +91,6 @@ class Controller {
         });
       }
 
-      // console.log(user, "data user google controller"); // Untuk debugging
       const payloadId = {
         id: user.id,
       };
@@ -105,20 +104,29 @@ class Controller {
   }
 
   static async getData(req, res, next) {
-    const searchQuery = req.query.search;
-
+    console.log(req.query.search, ">>>>");
     const options = {
       method: "GET",
-      url: `https://imdb-top-100-movies.p.rapidapi.com/?search=${searchQuery}`,
+      url: `https://imdb-top-100-movies.p.rapidapi.com/`,
       headers: {
-        "X-RapidAPI-Key": "d5f9bffc20mshf5d553eeb463cadp1fe23ajsn560846538476",
+        "X-RapidAPI-Key": "2b0f1971bbmsh00a67fd01d736ddp13d431jsn845bd5bc6269",
         "X-RapidAPI-Host": "imdb-top-100-movies.p.rapidapi.com",
       },
     };
 
     try {
       const response = await axios.request(options);
-      res.status(200).json(response.data);
+      let data = response.data;
+      data = response.data.filter((movie) => {
+        // console.log(movie);
+        return movie?.title
+          ?.toLowerCase()
+          .includes(req?.query?.search?.toLowerCase());
+      });
+
+      console.log(data, ">>>dat");
+
+      res.status(200).json(data);
     } catch (error) {
       console.log(error);
       next(error);
@@ -131,7 +139,7 @@ class Controller {
       method: "GET",
       url: `https://imdb-top-100-movies.p.rapidapi.com/${id}`,
       headers: {
-        "X-RapidAPI-Key": "d5f9bffc20mshf5d553eeb463cadp1fe23ajsn560846538476",
+        "X-RapidAPI-Key": "2b0f1971bbmsh00a67fd01d736ddp13d431jsn845bd5bc6269",
         "X-RapidAPI-Host": "imdb-top-100-movies.p.rapidapi.com",
       },
     };
@@ -169,7 +177,7 @@ class Controller {
       method: "GET",
       url: `https://imdb-top-100-movies.p.rapidapi.com/${id}`,
       headers: {
-        "X-RapidAPI-Key": "d5f9bffc20mshf5d553eeb463cadp1fe23ajsn560846538476",
+        "X-RapidAPI-Key": "2b0f1971bbmsh00a67fd01d736ddp13d431jsn845bd5bc6269",
         "X-RapidAPI-Host": "imdb-top-100-movies.p.rapidapi.com",
       },
     };

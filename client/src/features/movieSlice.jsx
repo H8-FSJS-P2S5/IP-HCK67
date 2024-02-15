@@ -20,7 +20,6 @@ export default moviesSlice.reducer;
 
 //handle testing
 //deploy
-// imdb , midtrans , sweetalert perbaiki
 //node mailer
 //search
 //filter

@@ -6,12 +6,15 @@ import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { setMovie } from "../features/movieSlice";
 import Swal from "sweetalert2";
+import Search from "../component/search";
 export default function Movie() {
   const dispatch = useDispatch();
   const movieList = useSelector((state) => state.movies.movies);
   const [isPremium, setIsPremium] = useState(false);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredMovieList, setFilteredMovieList] = useState([]);
 
   useEffect(() => {
     dispatch(fetchDetailMovie());
@@ -133,10 +136,10 @@ export default function Movie() {
     }
   };
 
-  const fetchMoreData = async () => {
+  const fetchMoreData = async (search = "") => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/movies?page=${movieList.length}&limit=10`,
+        `http://localhost:3000/movies?page=${movieList.length}&search=${searchQuery}&limit=10`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -147,18 +150,38 @@ export default function Movie() {
         setHasMore(false);
         return;
       }
+      console.log(response, ">>re");
 
-      dispatch(setMovie([...movieList, ...response.data]));
+      if (search !== "") {
+        dispatch(setMovie(response.data));
+      } else {
+        // dispatch(setMovie([]));
+        dispatch(setMovie([...movieList, ...response.data]));
+      }
     } catch (error) {
       console.log(error);
       throw error;
     }
   };
 
+  // useEffect(() => {
+  //   if (searchQuery) {
+  //     setFilteredMovieList(
+  //       movieList.filter((movie) => movie.title.includes(searchQuery))
+  //     );
+  //   }
+  // }, [searchQuery]);
+
+  useEffect(() => {
+    console.log(searchQuery, ">>>sear ch");
+    fetchMoreData(searchQuery);
+  }, [searchQuery]);
+
   return (
     <>
       <InfiniteScroll
         dataLength={movieList.length}
+        // dataLength={filteredMovieList.length}
         next={fetchMoreData}
         hasMore={hasMore}
         // loader={<h4>Loading...</h4>}
@@ -170,6 +193,10 @@ export default function Movie() {
               'url("https://isquad.tv/wp-content/uploads/2018/08/Netflix-Background.jpg")',
           }}
         >
+          <div className="col-span-full sm:col-span-2 md:col-span-3 lg:col-span-4 xl:col-span-5 flex justify-center mb-4">
+            <Search onSearch={setSearchQuery} />
+          </div>
+
           {movieList.map((el) => (
             <div
               key={el.id}
