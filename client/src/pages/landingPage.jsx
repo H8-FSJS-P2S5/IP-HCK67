@@ -22,7 +22,7 @@ export default function LandingPage() {
             </p>
             <Link to="/login">
               <button className="mt-8 text-white uppercase py-4 text-base font-light px-10 border border-white hover:bg-white hover:bg-opacity-10">
-                Get started
+                Login
               </button>
             </Link>
           </div>
@@ -32,7 +32,7 @@ export default function LandingPage() {
         <div className="max-w-screen-lg mx-auto flex justify-between items-center">
           <div className="max-w-xl">
             <h2 className="font-black text-sky-950 text-3xl mb-4">
-              Grab some food or sexy girlfriend!
+              Grab some food or Register first!
             </h2>
             <p className="text-base text-sky-950">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -41,7 +41,7 @@ export default function LandingPage() {
           </div>
           <Link to="/register">
             <button className="mt-8 text-white uppercase py-4 text-base font-light px-10 border border-white hover:bg-white hover:bg-opacity-10">
-              Get started
+              Register
             </button>
           </Link>
         </div>
