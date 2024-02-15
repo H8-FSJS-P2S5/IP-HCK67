@@ -128,7 +128,7 @@ export default function Movie() {
           {movieList.map((el) => (
             <div
               key={el.id}
-              className="w-full sm:w-72 md:w-96 lg:w-80 xl:w-96 cursor-pointer rounded-lg bg-white p-2 m-2 shadow duration-150 hover:scale-105 hover:shadow-md opacity-90"
+              className="w-full sm:w-1/5 md:w-1/5 lg:w-1/5 xl:w-1/5 cursor-pointer rounded-lg bg-white p-2 m-2 shadow duration-150 hover:scale-105 hover:shadow-md opacity-90"
             >
               <img
                 className="w-full h-auto rounded-lg object-cover object-center"
@@ -137,7 +137,6 @@ export default function Movie() {
               />
               <p className="font-bold text-black font-serif m-2">{el.title}</p>
               <p className="text-black font-serif m-2">
-                {" "}
                 Rank <strong /> : {el.rank}
               </p>
               <p className="font-semibold text-black font-mono m-2">
