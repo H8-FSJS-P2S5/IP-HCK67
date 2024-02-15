@@ -110,8 +110,8 @@ class Controller {
       method: "GET",
       url: "https://imdb-top-100-movies.p.rapidapi.com/",
       headers: {
-        "X-RapidAPI-Key": "73e74f8a4amsh366686e40c7e72fp1b2cafjsnaefa93627eb8",
-        "X-RapidAPI-Host": "imdb-top-100-movies.p.rapidapi.com",
+       'X-RapidAPI-Key': 'd5f9bffc20mshf5d553eeb463cadp1fe23ajsn560846538476',
+    'X-RapidAPI-Host': 'imdb-top-100-movies.p.rapidapi.com'
       },
     };
     try {
@@ -130,8 +130,8 @@ class Controller {
       method: "GET",
       url: `https://imdb-top-100-movies.p.rapidapi.com/${id}`,
       headers: {
-        "X-RapidAPI-Key": "73e74f8a4amsh366686e40c7e72fp1b2cafjsnaefa93627eb8",
-        "X-RapidAPI-Host": "imdb-top-100-movies.p.rapidapi.com",
+       'X-RapidAPI-Key': 'd5f9bffc20mshf5d553eeb463cadp1fe23ajsn560846538476',
+    'X-RapidAPI-Host': 'imdb-top-100-movies.p.rapidapi.com'
       },
     };
     console.log(options, "<<<<<<<<<getdatabyid");
@@ -168,8 +168,8 @@ class Controller {
       method: "GET",
       url: `https://imdb-top-100-movies.p.rapidapi.com/${id}`,
       headers: {
-        "X-RapidAPI-Key": "73e74f8a4amsh366686e40c7e72fp1b2cafjsnaefa93627eb8",
-        "X-RapidAPI-Host": "imdb-top-100-movies.p.rapidapi.com",
+       'X-RapidAPI-Key': 'd5f9bffc20mshf5d553eeb463cadp1fe23ajsn560846538476',
+    'X-RapidAPI-Host': 'imdb-top-100-movies.p.rapidapi.com'
       },
     };
 

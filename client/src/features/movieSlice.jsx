@@ -16,3 +16,15 @@ const moviesSlice = createSlice({
 
 export const { setMovie } = moviesSlice.actions;
 export default moviesSlice.reducer;
+
+
+//handle testing
+//deploy
+// imdb , midtrans , sweetalert perbaiki
+//node mailer
+//search
+//filter
+
+//ide tambahan
+//reset pass (fitur)
+//upload image

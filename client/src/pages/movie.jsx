@@ -19,6 +19,7 @@ export default function Movie() {
   }, []);
 
   const checkPremiumStatus = async () => {
+    // ini bener ga? handle premiummnya jg hilang
     try {
       const id = localStorage.getItem("id");
       const response = await axios.get(
@@ -62,7 +63,52 @@ export default function Movie() {
     }
   };
 
-  const handlePlay = async (id) => { // play
+  const changeStatusUsertoPremium = async (userId, movieId) => {
+    try {
+      console.log("masuk change status");
+      const { data } = await axios({
+        method: "put",
+        url: `http://localhost:3000/users/status/${userId}`,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      localStorage.removeItem("status");
+      console.log(data, "dari card review");
+      localStorage.setItem("status", data.status);
+      navigate(`/movies`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handlePremium = async (movieId) => {
+    try {
+      console.log("payment");
+      const { data } = await axios({
+        method: "POST",
+        url: `http://localhost:3000/movies/upgrate`,
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+
+      let userId = localStorage.getItem("id");
+
+      window.snap.pay(data.token, {
+        onSuccess: function (result) {
+          changeStatusUsertoPremium(userId, movieId);
+          localStorage.setItem("premium", true);
+          setShowPremiumModal(false);
+          setIsPremium(true);
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handlePlay = async (id) => {
+    // play
     if (!isPremium) {
       setShowPremiumModal(true);
     } else {
