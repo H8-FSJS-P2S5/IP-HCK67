@@ -62,7 +62,7 @@ export default function Movie() {
     }
   };
 
-  const handlePlay = async (id) => {
+  const handlePlay = async (id) => { // play
     if (!isPremium) {
       setShowPremiumModal(true);
     } else {
@@ -119,7 +119,7 @@ export default function Movie() {
         // loader={<h4>Loading...</h4>}
       >
         <div
-          className="flex flex-wrap justify-center m-3"
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4"
           style={{
             backgroundImage:
               'url("https://isquad.tv/wp-content/uploads/2018/08/Netflix-Background.jpg")',
@@ -128,7 +128,7 @@ export default function Movie() {
           {movieList.map((el) => (
             <div
               key={el.id}
-              className="w-full sm:w-1/5 md:w-1/5 lg:w-1/5 xl:w-1/5 cursor-pointer rounded-lg bg-white p-2 m-2 shadow duration-150 hover:scale-105 hover:shadow-md opacity-90"
+              className="w-full cursor-pointer rounded-lg bg-white shadow-md duration-150 hover:scale-105 opacity-90"
             >
               <img
                 className="w-full h-auto rounded-lg object-cover object-center"
