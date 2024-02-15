@@ -5,9 +5,8 @@ import { fetchDetailMovie } from "../features/actions";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { setMovie } from "../features/movieSlice";
-
+import Swal from "sweetalert2";
 export default function Movie() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const movieList = useSelector((state) => state.movies.movies);
   const [isPremium, setIsPremium] = useState(false);
@@ -38,7 +37,7 @@ export default function Movie() {
 
   const handleFavorite = async (id) => {
     try {
-      const response = await axios.post(
+      const { response, status } = await axios.post(
         `http://localhost:3000/favorites/${id}`,
         {},
         {
@@ -47,6 +46,15 @@ export default function Movie() {
           },
         }
       );
+      if (status === 200) {
+        await Swal.fire({
+          position: "top-center",
+          icon: "success",
+          title: `add movie successfully!`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
       console.log(response.data, "menambahkan favorit");
     } catch (error) {
       console.log(error);
@@ -94,7 +102,7 @@ export default function Movie() {
         setHasMore(false);
         return;
       }
-      
+
       dispatch(setMovie([...movieList, ...response.data]));
     } catch (error) {
       console.log(error);

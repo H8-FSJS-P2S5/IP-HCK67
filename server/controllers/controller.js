@@ -110,7 +110,7 @@ class Controller {
       method: "GET",
       url: "https://imdb-top-100-movies.p.rapidapi.com/",
       headers: {
-        "X-RapidAPI-Key": "8f700fb766msh567b7b5c944d5fep1a4fe2jsnf974fae038ac",
+        "X-RapidAPI-Key": "73e74f8a4amsh366686e40c7e72fp1b2cafjsnaefa93627eb8",
         "X-RapidAPI-Host": "imdb-top-100-movies.p.rapidapi.com",
       },
     };
@@ -130,7 +130,7 @@ class Controller {
       method: "GET",
       url: `https://imdb-top-100-movies.p.rapidapi.com/${id}`,
       headers: {
-        "X-RapidAPI-Key": "8f700fb766msh567b7b5c944d5fep1a4fe2jsnf974fae038ac",
+        "X-RapidAPI-Key": "73e74f8a4amsh366686e40c7e72fp1b2cafjsnaefa93627eb8",
         "X-RapidAPI-Host": "imdb-top-100-movies.p.rapidapi.com",
       },
     };
@@ -168,7 +168,7 @@ class Controller {
       method: "GET",
       url: `https://imdb-top-100-movies.p.rapidapi.com/${id}`,
       headers: {
-        "X-RapidAPI-Key": "8f700fb766msh567b7b5c944d5fep1a4fe2jsnf974fae038ac",
+        "X-RapidAPI-Key": "73e74f8a4amsh366686e40c7e72fp1b2cafjsnaefa93627eb8",
         "X-RapidAPI-Host": "imdb-top-100-movies.p.rapidapi.com",
       },
     };
@@ -185,7 +185,7 @@ class Controller {
 
       // console.log(findId, "masuk1<<<<");
       const filterMovie = findId.filter((el) => {
-        return el.MovieId === id;   
+        return el.MovieId === id;
       });
       if (filterMovie.length !== 0) {
         throw { name: "Data Already Exists" };

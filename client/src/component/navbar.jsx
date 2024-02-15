@@ -7,14 +7,13 @@ function Navbar() {
     <>
       <div className="navbar bg-black">
         <div className="navbar-start">
-          <Link className="btn btn-white text-xl" to="/favorites">
+          <Link className="btn btn-ghost text-xl" to="/favorites">
             FAV
           </Link>
         </div>
         <div className="navbar-center">
-          <Link className="btn btn-white text-xl" to="/">
-            {" "}
-            HANSMOVE{" "}
+          <Link className="btn btn-ghost text-xl" to="/movies">
+            HANSMOVE
           </Link>
         </div>
         <div className="navbar-end">
@@ -27,7 +26,7 @@ function Navbar() {
               <div className="w-10 rounded-full">
                 <img
                   alt="Tailwind CSS Navbar component"
-                  src="https://images.rawpixel.com/image_png_social_square/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTAxL3JtNjA5LXNvbGlkaWNvbi13LTAwMi1wLnBuZw.png"
+                  src="https://www.mordeo.org/files/uploads/2021/02/Sydney-Sweeney-In-Yellow-Dress-2021-Photoshoot-4K-Ultra-HD-Mobile-Wallpaper-scaled.jpg"
                 />
               </div>
             </div>

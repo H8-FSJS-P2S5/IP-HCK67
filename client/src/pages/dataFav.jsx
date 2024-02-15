@@ -25,7 +25,7 @@ export default function DataFav() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/delete/${id}`, {
+      await axios.delete(`http://localhost:3000/favorites/delete/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -44,7 +44,7 @@ export default function DataFav() {
   return (
     <>
       <div className="m-10">
-        <h2 className="font-extrabold text-center text-2xl">Favorite</h2>
+        <h2 className="font-extrabold text-center text-2xl">Your Movie List, hun!</h2>
       </div>
 
       <div className="flex flex-wrap justify-center">
