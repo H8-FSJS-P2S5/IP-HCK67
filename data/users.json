@@ -1,0 +1,21 @@
+[
+    {   "username":"admin",
+        "email":"admin@gmail.com",
+        "password":"admin123",
+        "role":"admin"
+
+    },
+    {   "username":"subscriber",
+        "email":"subscriber@gmail.com",
+        "password":"subscriber123",
+        "role":"subscriber"
+
+    },
+    {   "username":"viewer",
+        "email":"viewer@gmail.com",
+        "password":"viewer123",
+        "role":"viewer"
+    
+    }
+
+]
